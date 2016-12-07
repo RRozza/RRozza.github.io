@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="format-detection" content="telephone=no">
+        <meta name="msapplication-tap-highlight" content="no">
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+        <style>
+            body { background: #000000; overflow: hidden; }
+            canvas { display: block; }
+        </style>
+
+        <title>Camera Mapping</title>
+    </head>
+    <body>
+        <canvas id="webgl" class="buffer"></canvas>
+
+        <script type="text/javascript" src="thirdparty/js/three.min.js"></script>
+        <script type="text/javascript" src="thirdparty/js/OrbitControls.js"></script>
+        <script type="text/javascript" src="thirdparty/js/OBJLoader.js"></script>
+
+        <script type="text/javascript" src="js/mx_webgl.js"></script>
+        <script>
+            webgl = new mx_webgl();
+            webgl.init();
+            webgl.setCamera({ origin: [0.4, 0.4, 0.4], target: [0.0, 0.0, 0.0] });
+            [
+                '/scene/Puma025550',
+                '/scene/Puma050255',
+                '/scene/Puma0125125',
+                '/scene/Puma0125255',
+                '/scene/Puma255050',
+                '/scene/Puma255500',
+                '/scene/Puma500255',
+                '/scene/Puma502550',
+                '/scene/Puma1010255',
+                '/scene/Puma1025510',
+                '/scene/Puma1250255',
+                '/scene/Puma1252550',
+                '/scene/Puma2551010',
+                '/scene/Puma10255255',
+                '/scene/Puma25510125',
+                '/scene/Puma25510255',
+                '/scene/Puma25512510',
+                '/scene/Puma50100200',
+                '/scene/Puma125125125',
+                '/scene/Puma125125255',
+                '/scene/Puma125255125',
+                '/scene/Puma250250250'
+            ].forEach(function (e) {
+                webgl.loadEntity(e);
+            });
+
+        </script>
+</html>
