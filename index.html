@@ -14,9 +14,9 @@
     <body>
         <canvas id="webgl" class="buffer"></canvas>
 
-        <script type="text/javascript" src="thirdparty/three.min.js"></script>
-        <script type="text/javascript" src="thirdparty/OrbitControls.js"></script>
-        <script type="text/javascript" src="thirdparty/OBJLoader.js"></script>
+        <script type="text/javascript" src="thirdparty/js/three.min.js"></script>
+        <script type="text/javascript" src="thirdparty/js/OrbitControls.js"></script>
+        <script type="text/javascript" src="thirdparty/js/OBJLoader.js"></script>
 
         <script>
             var _camera = null;
@@ -98,26 +98,8 @@
             init();
             
             var value = getParameterByName("scene");
-            if (value === "Puma") {
-                setCamera({ origin: [0.4, 0.4, 0.4], target: [0.0, 0.0, 0.0] });
-
-                [
-                    '/images/Puma025550', '/images/Puma050255', '/images/Puma0125125',
-                    '/images/Puma0125255', '/images/Puma255050', '/images/Puma255500',
-                    '/images/Puma500255', '/images/Puma502550', '/images/Puma1010255',
-                    '/images/Puma1025510', '/images/Puma1250255', '/images/Puma1252550',
-                    '/images/Puma2551010', '/images/Puma10255255', '/images/Puma25510125',
-                    '/images/Puma25510255', '/images/Puma25512510', '/images/Puma50100200',
-                    '/images/Puma125125125', '/images/Puma125125255', '/images/Puma125255125',
-                    '/images/Puma250250250'
-                ].forEach(function (e) {
-                    loadEntity(e);
-                });
-            }
-
             if (value === "Room") {
                 setCamera({ origin: [-20.0, 15.0, -20.0], target: [0.0, 0.0, 0.0] });
-
                 [
                     '/images/Room00125', '/images/Room00255', '/images/Room01250',
                     '/images/Room02550', '/images/Room12500', '/images/Room014050',
@@ -132,6 +114,20 @@
                     '/images/Room2551800', '/images/Room2552550', '/images/Room5017050',
                     '/images/Room5025550', '/images/Room5050170', '/images/Room5050255',
                     '/images/Room25550170', '/images/Room50170170', '/images/Room130255190'
+                ].forEach(function (e) {
+                    loadEntity(e);
+                });
+            } else {
+                setCamera({ origin: [0.4, 0.4, 0.4], target: [0.0, 0.0, 0.0] });
+                [
+                    '/images/Puma025550', '/images/Puma050255', '/images/Puma0125125',
+                    '/images/Puma0125255', '/images/Puma255050', '/images/Puma255500',
+                    '/images/Puma500255', '/images/Puma502550', '/images/Puma1010255',
+                    '/images/Puma1025510', '/images/Puma1250255', '/images/Puma1252550',
+                    '/images/Puma2551010', '/images/Puma10255255', '/images/Puma25510125',
+                    '/images/Puma25510255', '/images/Puma25512510', '/images/Puma50100200',
+                    '/images/Puma125125125', '/images/Puma125125255', '/images/Puma125255125',
+                    '/images/Puma250250250'
                 ].forEach(function (e) {
                     loadEntity(e);
                 });
