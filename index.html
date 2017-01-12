@@ -5,7 +5,7 @@
         <meta name="msapplication-tap-highlight" content="no">
         <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
         <style>
-            body { background: #000000; overflow: hidden; }
+            body { background: #000000; overflow: hidden; margin: 0px}
             canvas { display: block; }
         </style>
 
@@ -14,9 +14,7 @@
     <body>
         <canvas id="webgl" class="buffer"></canvas>
 
-        <script type="text/javascript" src="thirdparty/js/three.min.js"></script>
-        <script type="text/javascript" src="thirdparty/js/OrbitControls.js"></script>
-        <script type="text/javascript" src="thirdparty/js/OBJLoader.js"></script>
+        <script type="text/javascript" src="thirdparty.min.js"></script>
 
         <script>
             var _camera = null;
@@ -49,17 +47,18 @@
             };
 
             function setCamera (data) {
-                var filmSize = 27;
+                var filmSize = 24;
                 var focalLength = 35;
                 var fov = 2.0*180.0/Math.PI*Math.atan(0.5*filmSize/focalLength);
 
                 _camera = new THREE.PerspectiveCamera(fov,  window.innerWidth/window.innerHeight, 0.02, 1000);
                 _camera.position.set(data.origin[0], data.origin[1], data.origin[2]);
 
-                var target = new THREE.Vector3(data.target[0], data.target[1], data.target[2]);
-                _camera.lookAt(target);
-
                 _controls = new THREE.OrbitControls(_camera);
+
+                _controls.target.set(data.target[0], data.target[1], data.target[2]);
+                _camera.lookAt(_controls.target);
+              
                 _controls.addEventListener('change', render);
 
                 animate();
@@ -78,60 +77,30 @@
                 });
             };
 
-            function getParameterByName(name, url) {
-                if (!url)
-                    url = window.location.href;
-
-                name = name.replace(/[\[\]]/g, "\\$&");
-                var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)");
-                var results = regex.exec(url);
-
-                if (!results)
-                    return null;
-
-                if (!results[2])
-                    return '';
-
-                return decodeURIComponent(results[2].replace(/\+/g, " "));
-            };
-
             init();
-            
-            var value = getParameterByName("scene");
-            if (value === "Room") {
-                setCamera({ origin: [-20.0, 15.0, -20.0], target: [0.0, 0.0, 0.0] });
-                [
-                    '/images/Room00125', '/images/Room00255', '/images/Room01250',
-                    '/images/Room02550', '/images/Room12500', '/images/Room014050',
-                    '/images/Room017050', '/images/Room25500', '/images/Room120500',
-                    '/images/Room0125125', '/images/Room0125255', '/images/Room125500',
-                    '/images/Room140050', '/images/Room170500', '/images/Room0255125',
-                    '/images/Room500125', '/images/Room500140', '/images/Room500170',
-                    '/images/Room500255', '/images/Room501200', '/images/Room501250',
-                    '/images/Room1250125', '/images/Room1251250', '/images/Room1252550',
-                    '/images/Room1700170', '/images/Room1701700', '/images/Room1702550',
-                    '/images/Room2550120', '/images/Room2550125', '/images/Room2551250',
-                    '/images/Room2551800', '/images/Room2552550', '/images/Room5017050',
-                    '/images/Room5025550', '/images/Room5050170', '/images/Room5050255',
-                    '/images/Room25550170', '/images/Room50170170', '/images/Room130255190'
-                ].forEach(function (e) {
-                    loadEntity(e);
-                });
-            } else {
-                setCamera({ origin: [0.4, 0.4, 0.4], target: [0.0, 0.0, 0.0] });
-                [
-                    '/images/Puma025550', '/images/Puma050255', '/images/Puma0125125',
-                    '/images/Puma0125255', '/images/Puma255050', '/images/Puma255500',
-                    '/images/Puma500255', '/images/Puma502550', '/images/Puma1010255',
-                    '/images/Puma1025510', '/images/Puma1250255', '/images/Puma1252550',
-                    '/images/Puma2551010', '/images/Puma10255255', '/images/Puma25510125',
-                    '/images/Puma25510255', '/images/Puma25512510', '/images/Puma50100200',
-                    '/images/Puma125125125', '/images/Puma125125255', '/images/Puma125255125',
-                    '/images/Puma250250250'
-                ].forEach(function (e) {
-                    loadEntity(e);
-                });
-            }
+            /* Puma
+            var ogn = [0.4, 0.4, 0.4];
+            var tgt = [0.0, 0.0, 0.0];           
+            var ety = [
+                '/images/Puma025550', '/images/Puma050255', '/images/Puma0125125',
+                '/images/Puma0125255', '/images/Puma255050', '/images/Puma255500',
+                '/images/Puma500255', '/images/Puma502550', '/images/Puma1010255',
+                '/images/Puma1025510', '/images/Puma1250255', '/images/Puma1252550',
+                '/images/Puma2551010', '/images/Puma10255255', '/images/Puma25510125',
+                '/images/Puma25510255', '/images/Puma25512510', '/images/Puma50100200',
+                '/images/Puma125125125', '/images/Puma125125255', '/images/Puma125255125',
+                '/images/Puma250250250'
+            ];
+            */
+
+            var ogn = [0.054, 0.172, -0.559];
+            var tgt = [0.006, 0.056, -0.688];           
+            var ety = [ '/images/Simball25500', '/images/Simball02550', '/images/Simball00255', '/images/Simball2550255', '/images/Simball255255255' ];        
+
+            setCamera({ origin: ogn, target: tgt });
+            ety.forEach(function (e) {
+                loadEntity(e);
+            });
 
         </script>
 </html>
