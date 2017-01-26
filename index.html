@@ -10,97 +10,14 @@
         </style>
 
         <title>Baking</title>
+
+        <script type="text/javascript" src="spin.min.js"></script> 
+        <script type="text/javascript" src="three.min.js"></script> 
+        <script type="text/javascript" src="OBJLoader.js"></script>         
+        <script type="text/javascript" src="OrbitControls.js"></script>
+
     </head>
     <body>
         <canvas id="webgl" class="buffer"></canvas>
-
-        <script type="text/javascript" src="thirdparty.min.js"></script>
-
-        <script>
-            var _camera = null;
-            var _scene = null;
-            var _renderer = null;
-            var _controls = null;
-
-            function init () {
-                _scene = new THREE.Scene();
-
-                var ambientLight = new THREE.AmbientLight(0xFFFFFF, 1);
-                _scene.add(ambientLight);
-
-                var canvas = document.getElementById('webgl');
-                _renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
-                _renderer.setPixelRatio(1);
-                _renderer.setSize(window.innerWidth, window.innerHeight, true);
-                _renderer.setViewport(0, 0, window.innerWidth, window.innerHeight);
-                _renderer.setClearColor(0x000000, 0);
-            };
-
-            var render = function () {
-                _renderer.render(_scene, _camera);
-            };
-
-            var animate = function () {
-                requestAnimationFrame(animate);
-                _controls.update();
-                render();
-            };
-
-            function setCamera (data) {
-                var filmSize = 24;
-                var focalLength = 35;
-                var fov = 2.0*180.0/Math.PI*Math.atan(0.5*filmSize/focalLength);
-
-                _camera = new THREE.PerspectiveCamera(fov,  window.innerWidth/window.innerHeight, 0.02, 1000);
-                _camera.position.set(data.origin[0], data.origin[1], data.origin[2]);
-
-                _controls = new THREE.OrbitControls(_camera);
-
-                _controls.target.set(data.target[0], data.target[1], data.target[2]);
-                _camera.lookAt(_controls.target);
-              
-                _controls.addEventListener('change', render);
-
-                animate();
-            };
-
-            function loadEntity (name) {
-                var texLoader = new THREE.TextureLoader();
-                texLoader.load(name + '.png', function(tex) {
-                    var material = new THREE.MeshBasicMaterial({ map: tex });
-                    var objLoader = new THREE.OBJLoader();
-                    objLoader.load(name + '.obj', function(obj) {
-                        var mesh = obj.children[0];
-                        mesh.material = material;
-                        _scene.add(mesh);
-                    });
-                });
-            };
-
-            init();
-            /* Puma
-            var ogn = [0.4, 0.4, 0.4];
-            var tgt = [0.0, 0.0, 0.0];           
-            var ety = [
-                '/images/Puma025550', '/images/Puma050255', '/images/Puma0125125',
-                '/images/Puma0125255', '/images/Puma255050', '/images/Puma255500',
-                '/images/Puma500255', '/images/Puma502550', '/images/Puma1010255',
-                '/images/Puma1025510', '/images/Puma1250255', '/images/Puma1252550',
-                '/images/Puma2551010', '/images/Puma10255255', '/images/Puma25510125',
-                '/images/Puma25510255', '/images/Puma25512510', '/images/Puma50100200',
-                '/images/Puma125125125', '/images/Puma125125255', '/images/Puma125255125',
-                '/images/Puma250250250'
-            ];
-            */
-
-            var ogn = [0.054, 0.172, -0.559];
-            var tgt = [0.006, 0.056, -0.688];           
-            var ety = [ '/images/Simball25500', '/images/Simball02550', '/images/Simball00255', '/images/Simball2550255', '/images/Simball255255255' ];        
-
-            setCamera({ origin: ogn, target: tgt });
-            ety.forEach(function (e) {
-                loadEntity(e);
-            });
-
-        </script>
+        <script type="text/javascript" src="index.js"></script>
 </html>
