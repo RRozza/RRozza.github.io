@@ -5,15 +5,6 @@ var _controls = null;
 var _renderer = null;
 
 var render = function () {
-    var width = _renderer.domElement.clientWidth;
-    var height = _renderer.domElement.clientHeight;
-
-    var widthThreeJS = Math.floor(width * window.devicePixelRatio);
-    var heightThreeJS = Math.floor(height * window.devicePixelRatio);
-
-    if (_renderer.domElement.width !== widthThreeJS || _renderer.domElement.height !== heightThreeJS)
-        _renderer.setSize( width, height, false );
-
     _renderer.render(_scene, _camera);
 };
 
@@ -79,21 +70,21 @@ document.addEventListener("DOMContentLoaded", function(event) {
             var ambientLight = new THREE.AmbientLight(0xFFFFFF, 0.1);
             _scene.add(ambientLight);
 
-            var softRightLight = new THREE.RectAreaLight(0xFFFFFF, 0.8, 0.6, 0.45, 1, 1);
+            var softRightLight = new THREE.RectAreaLight(0xFFFFFF, 0.5, 0.6, 0.45);
             softRightLight.matrixAutoUpdate = true;
             softRightLight.position.set(0.399, 0.218, -0.684);
             softRightLight.rotateY(-0.2 * Math.PI);
             softRightLight.rotateX(0.125 * Math.PI);
             softRightLight.add(new THREE.RectAreaLightHelper(softRightLight));
 
-            var softLeftLight = new THREE.RectAreaLight(0xFFFFFF, 0.9, 0.15, 0.15, 1, 1);
+            var softLeftLight = new THREE.RectAreaLight(0xFFFFFF, 0.4, 0.15, 0.15);
             softLeftLight.matrixAutoUpdate = true;
             softLeftLight.position.set(0.269, 0.693, 0.484);
             softLeftLight.rotateY(1.09 * Math.PI);
             softLeftLight.rotateX(0.32 * Math.PI);
             softLeftLight.add(new THREE.RectAreaLightHelper(softLeftLight));
 
-            var softTopLight = new THREE.RectAreaLight(0xFFFFFF, 0.4, 0.75, 0.75, 1, 1);
+            var softTopLight = new THREE.RectAreaLight(0xFFFFFF, 0.6, 0.75, 0.75);
             softTopLight.matrixAutoUpdate = true;
             softTopLight.position.set(0.100, 0.835, -0.305);
             softTopLight.rotateZ(-0.12 * Math.PI);
@@ -144,13 +135,13 @@ document.addEventListener("DOMContentLoaded", function(event) {
             var ambientLight = new THREE.AmbientLight(0xFFFFFF, 1);
             _scene.add(ambientLight);
 
-            var sideLight = new THREE.RectAreaLight(0xFFFFFF, 0.3, 0.135, 0.135, 0.5, 0.5);
+            var sideLight = new THREE.RectAreaLight(0xFFFFFF, 0.04, 0.135, 0.135, 0.5, 0.5);
             sideLight.matrixAutoUpdate = true;
             sideLight.position.set(-0.385, 0.183, -0.532);
             sideLight.rotateY(0.5 * Math.PI);
             sideLight.add(new THREE.RectAreaLightHelper(sideLight));
 
-            var topLight = new THREE.RectAreaLight(0xFFFFFF, 0.2, 0.56, 0.57, 0.5, 0.5);
+            var topLight = new THREE.RectAreaLight(0xFFFFFF, 0.05, 0.56, 0.57, 0.5, 0.5);
             topLight.matrixAutoUpdate = true;
             topLight.position.set(0.195, 0.620, -0.675);
             topLight.rotateX(0.5*Math.PI);
@@ -161,14 +152,14 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
             /* OBJECTS */ 
 
-            var objWithNormals = [ '25500', '02550' ];            
-            objWithNormals.forEach(function (name) {
-                loadEntity(name, [0.0, 0.0, 0.0], undefined, true);
+            var stdWithNormals = [ '505010', '505020' ];            
+            stdWithNormals.forEach(function (name) {
+                loadEntity(name, [0.0, 0.0, 0.0], undefined, 2);
             });
 
-            var objWithoutNormals = [ '00255', '2550255', '255255255'];
-            objWithoutNormals.forEach(function (name) {
-                loadEntity(name, [0.0, 0.0, 0.0], undefined, false);
+            var basicWithoutNormals = [ '00255', '2550255', '255255255'];
+            basicWithoutNormals.forEach(function (name) {
+                loadEntity(name, [0.0, 0.0, 0.0], undefined, 0);
             });
             break;
 
