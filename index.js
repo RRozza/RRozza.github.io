@@ -106,7 +106,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
             ];
 
             mainObjects.forEach(function (name) {
-                loadEntity(name, [0.0, 0.0, 0.0], undefined);
+                loadEntity(name, [0.0, 0.0, 0.0], undefined, undefined);
             });
     
             var restObjects = [ 
@@ -115,7 +115,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
             ];
 
             restObjects.forEach(function (name) {
-                loadEntity(name, [0.0, 0.0, 0.0], "Basic");
+                loadEntity(name, [0.0, 0.0, 0.0], "Basic", undefined);
             });       
 
             break;
