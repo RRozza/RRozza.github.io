@@ -171,7 +171,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
             break;
 
         default:
-            alert('Error: Missing scene parameter. Example: index.html?scene=Puma')
+            alert('Error: Missing scene parameter. Example: index.html?scene=Puma');
             break;
     }
 
@@ -325,7 +325,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     var start = function () {
         var canvas = document.getElementById('viewport');
-        _renderer = new THREE.WebGLRenderer({ canvas: canvas });
+        _renderer = new THREE.WebGLRenderer({ canvas: canvas });     
         _renderer.setPixelRatio(_aspect);
         _renderer.setSize(_width, _height, false);
         _renderer.setViewport(0, 0, _width, _height);
