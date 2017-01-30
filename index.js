@@ -27,6 +27,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
     var _height = 0;
     var _aspect = 0;
 
+    _scene = new THREE.Scene();
+
     function getParameterByName(name, url) {
         if (!url)
             url = window.location.href;
@@ -44,9 +46,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
         return decodeURIComponent(results[2].replace(/\+/g, " "));
     };
 
-    _scene = new THREE.Scene();
-
     var _sceneName = getParameterByName("scene");
+    var _viewportSize = Number(getParameterByName("size"));
+    var _materialType = getParameterByName("material");
+
     switch (_sceneName)
     {
         case "Puma":
@@ -67,7 +70,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
             /* LIGHTS */ 
 
-            var ambientLight = new THREE.AmbientLight(0xFFFFFF, 0.1);
+            var ambientLight = new THREE.AmbientLight(0xFFFFFF, 0.8);
             _scene.add(ambientLight);
 
             var softRightLight = new THREE.RectAreaLight(0xFFFFFF, 0.5, 0.6, 0.45);
@@ -97,20 +100,23 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
             /* OBJECTS */
 
-            var stdWithNormals = [ '505010', '505040', '505050', '505060', '505070', '505080', '505090', '5050100', '505030' ];  
-            stdWithNormals.forEach(function (name) {
-                loadEntity(name, [0.0, 0.0, 0.0], undefined, 2);
-            });
-            
-            var stdWithoutNormals = [ '505020', '5050110', '5050120', '5050140' ];
-            stdWithoutNormals.forEach(function (name) {
-                loadEntity(name, [0.0, 0.0, 0.0], undefined, 1);
-            });
+            var mainObjects = [ 
+                '505010', '505020', '505030', '505040', '505050', '505060', '505070', 
+                '505080', '505090', '5050100', '5050110', '5050120', '5050130', '5050140'
+            ];
 
-            var basicWithoutNormals = [ '805011', '805022', '805033', '805044', '805055', '805066', '805077', '805088', '805099', '508011' ];
-            basicWithoutNormals.forEach(function (name) {
-                loadEntity(name, [0.0, 0.0, 0.0], undefined, 0);
+            mainObjects.forEach(function (name) {
+                loadEntity(name, [0.0, 0.0, 0.0], undefined);
             });
+    
+            var restObjects = [ 
+                '805011', '805022', '805033', '805044', '805055', 
+                '805066', '805077', '805088', '805099', '508011',
+            ];
+
+            restObjects.forEach(function (name) {
+                loadEntity(name, [0.0, 0.0, 0.0], "Basic");
+            });       
 
             break;
 
@@ -132,7 +138,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
             /* LIGHTS */ 
 
-            var ambientLight = new THREE.AmbientLight(0xFFFFFF, 1);
+            var ambientLight = new THREE.AmbientLight(0xFFFFFF, 0.8);
             _scene.add(ambientLight);
 
             var sideLight = new THREE.RectAreaLight(0xFFFFFF, 0.04, 0.135, 0.135, 0.5, 0.5);
@@ -152,15 +158,16 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
             /* OBJECTS */ 
 
-            var stdWithNormals = [ '505010', '505020' ];            
-            stdWithNormals.forEach(function (name) {
-                loadEntity(name, [0.0, 0.0, 0.0], undefined, 2);
+            var mainObjects = [ '505010', '505020' ];
+            mainObjects.forEach(function (name) {
+                loadEntity(name, [0.0, 0.0, 0.0], undefined, undefined);
             });
 
-            var basicWithoutNormals = [ '00255', '2550255', '255255255'];
-            basicWithoutNormals.forEach(function (name) {
-                loadEntity(name, [0.0, 0.0, 0.0], undefined, 0);
+            var restObjects = [ '00255', '2550255', '255255255' ];
+            restObjects.forEach(function (name) {
+                loadEntity(name, [0.0, 0.0, 0.0], "Basic", 0);
             });
+
             break;
 
         default:
@@ -210,7 +217,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         );
     };
 
-    function loadEntity(name, pos, channels, matType) {
+    function loadEntity(name, pos, mat, size) {
         _totalObjects++;
 
         if (pos === undefined)
@@ -244,44 +251,76 @@ document.addEventListener("DOMContentLoaded", function(event) {
         };
 
         var imgType = '.png';
-        switch (matType)
+        var texLoader = new THREE.TextureLoader();
+
+        var imgResolution = null;
+
+        if (size !== undefined)
+            _viewportSize = size;
+
+        switch (_viewportSize)
         {
             case 0:
-                /* Color channel */
-                var texLoader = new THREE.TextureLoader();
-                texLoader.setPath('./images/' + _sceneName + '/baking/');
-                texLoader.load(name + imgType, function (colorMap) {
-                    var material = new THREE.MeshBasicMaterial({ map: colorMap });
-                    loadObject(material);
-                });
+                imgResolution = "";
                 break;
             case 1:
-                /* Color channel */
-                var texLoader = new THREE.TextureLoader();
-                texLoader.setPath('./images/' + _sceneName + '/baking/');
-                texLoader.load(name + imgType, function (colorMap) {
-                    var material = new THREE.MeshStandardMaterial({ map: colorMap });
-                    loadObject(material);
-                });
+                imgResolution = "256/";
                 break;
             case 2:
-                /* Color & Normals channels */
-                var texLoader = new THREE.TextureLoader();
-                texLoader.setPath('./images/' + _sceneName + '/baking/');
-                texLoader.load(name + imgType, function (colorMap) {
+                imgResolution = "512/";
+                break;
+            case 3:
+                imgResolution = "1024/";
+                break;
+            case 4:
+                imgResolution = "2048/";
+                break;
+            default:
+                imgResolution = "512/";
+                break;
+        }
+
+        texLoader.setPath('./images/' + _sceneName + '/baking/' + imgResolution );
+        texLoader.load(name + imgType, function (colorMap) {
+            var meshMaterial = null;
+            
+            if (mat !== undefined)
+                _materialType = mat;
+            
+            switch (_materialType)
+            {    
+                case "Basic":
+                    meshMaterial = new THREE.MeshBasicMaterial({ map: colorMap });
+                    loadObject(meshMaterial);
+                    break;
+                case "Lambert":
+                    meshMaterial = new THREE.MeshLambertMaterial({ map: colorMap });
+                    loadObject(meshMaterial);
+                    break;
+                case "StdWithoutNormals":
+                    meshMaterial = new THREE.MeshStandardMaterial({ map: colorMap });
+                    loadObject(meshMaterial);
+                    break;
+                case "StdWithNormals":
                     texLoader.load(name + 'n' + imgType, function (normalMap) {
-                        var material = new THREE.MeshStandardMaterial({ 
+                        meshMaterial = new THREE.MeshStandardMaterial({ 
                             map: colorMap, 
                             normalMap: normalMap,
                             normalScale: new THREE.Vector2(0.5, 0.5)
                         });
-                        loadObject(material);
+                        loadObject(meshMaterial);
                     });
-                });
-                break;
-            default:
-                break;
-        }
+                    break;
+                default:
+                    meshMaterial = new THREE.MeshBasicMaterial({ 
+                        color: Math.random() * 0xFFFFFF, 
+                        wireframe: true, 
+                        wireframeLinewidth: 2
+                    });
+                    loadObject(meshMaterial);
+                    break;
+            }
+        });
     };
 
     var start = function () {
