@@ -141,13 +141,13 @@ document.addEventListener("DOMContentLoaded", function(event) {
             var ambientLight = new THREE.AmbientLight(0xFFFFFF, 0.8);
             _scene.add(ambientLight);
 
-            var sideLight = new THREE.RectAreaLight(0xFFFFFF, 0.04, 0.135, 0.135, 0.5, 0.5);
+            var sideLight = new THREE.RectAreaLight(0xFFFFFF, 0.1, 0.135, 0.135, 0.5, 0.5);
             sideLight.matrixAutoUpdate = true;
             sideLight.position.set(-0.385, 0.183, -0.532);
             sideLight.rotateY(0.5 * Math.PI);
             sideLight.add(new THREE.RectAreaLightHelper(sideLight));
 
-            var topLight = new THREE.RectAreaLight(0xFFFFFF, 0.05, 0.56, 0.57, 0.5, 0.5);
+            var topLight = new THREE.RectAreaLight(0xFFFFFF, 0.12, 0.56, 0.57, 0.5, 0.5);
             topLight.matrixAutoUpdate = true;
             topLight.position.set(0.195, 0.620, -0.675);
             topLight.rotateX(0.5*Math.PI);
