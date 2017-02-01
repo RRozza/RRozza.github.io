@@ -62,7 +62,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
             /* CAMERA */
 
             loadCamera({
-                origin: [0.353, 0.160, 0.068],
+                origin: [0.155, 0.129, -0.306],
                 target: [0.006, 0.069, 0.018],
                 filmHeight: 20,
                 focalLength: 35.6
