@@ -47,8 +47,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
     };
 
     var _sceneName = getParameterByName("scene");
-    var _viewportSize = Number(getParameterByName("size"));
-    var _materialType = getParameterByName("material");
+    var _viewportSize = 2/*Number(getParameterByName("size"))*/;
+    var _materialType = (_sceneName === "Puma") ? "StdWithNormals" : "Full"/*getParameterByName("material")*/;
 
     switch (_sceneName)
     {
@@ -62,41 +62,16 @@ document.addEventListener("DOMContentLoaded", function(event) {
             /* CAMERA */
 
             loadCamera({
-                origin: [0.155, 0.129, -0.306],
+                origin: [0.353, 0.160, 0.068],
                 target: [0.006, 0.069, 0.018],
                 filmHeight: 20,
                 focalLength: 35.6
             });
 
-            /* LIGHTS */ 
-
-            var ambientLight = new THREE.AmbientLight(0xFFFFFF, 0.8);
+            /* LIGHTS */
+            
+            var ambientLight = new THREE.AmbientLight(0xFFFFFF, 1.0);
             _scene.add(ambientLight);
-
-            var softRightLight = new THREE.RectAreaLight(0xFFFFFF, 0.5, 0.6, 0.45);
-            softRightLight.matrixAutoUpdate = true;
-            softRightLight.position.set(0.399, 0.218, -0.684);
-            softRightLight.rotateY(-0.2 * Math.PI);
-            softRightLight.rotateX(0.125 * Math.PI);
-            softRightLight.add(new THREE.RectAreaLightHelper(softRightLight));
-
-            var softLeftLight = new THREE.RectAreaLight(0xFFFFFF, 0.4, 0.15, 0.15);
-            softLeftLight.matrixAutoUpdate = true;
-            softLeftLight.position.set(0.269, 0.693, 0.484);
-            softLeftLight.rotateY(1.09 * Math.PI);
-            softLeftLight.rotateX(0.32 * Math.PI);
-            softLeftLight.add(new THREE.RectAreaLightHelper(softLeftLight));
-
-            var softTopLight = new THREE.RectAreaLight(0xFFFFFF, 0.6, 0.75, 0.75);
-            softTopLight.matrixAutoUpdate = true;
-            softTopLight.position.set(0.100, 0.835, -0.305);
-            softTopLight.rotateZ(-0.12 * Math.PI);
-            softTopLight.rotateX(0.44 * Math.PI);
-            softTopLight.add(new THREE.RectAreaLightHelper(softTopLight));
-
-            _scene.add(softTopLight);
-            _scene.add(softLeftLight);
-            _scene.add(softRightLight);
 
             /* OBJECTS */
 
@@ -120,56 +95,43 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
             break;
 
-        case "Simball":
-            /* RESOLUTION */
-
-            _width = 500;
-            _height = 500;
-            _aspect = 1;
+        case "Spheres":
+            /* RENDERER */
+            
+            _width = 720;
+            _height = 400;
+            _aspect = 0.9;
 
             /* CAMERA */
 
             loadCamera({
-                origin: [0.054, 0.172, -0.559],
-                target: [0.006, 0.056, -0.688],
-                filmHeight: 24.0,
-                focalLength: 35.0
+                origin: [0.411, 0.0768, 0.060],
+                target: [0.029, 0.043, 0.010],
+                filmHeight: 20,
+                focalLength: 35.6
             });
 
-            /* LIGHTS */ 
+            /* LIGHTS */
 
-            var ambientLight = new THREE.AmbientLight(0xFFFFFF, 0.8);
+            var ambientLight = new THREE.AmbientLight(0xFFFFFF, 1.0);
             _scene.add(ambientLight);
 
-            var sideLight = new THREE.RectAreaLight(0xFFFFFF, 0.1, 0.135, 0.135, 0.5, 0.5);
-            sideLight.matrixAutoUpdate = true;
-            sideLight.position.set(-0.385, 0.183, -0.532);
-            sideLight.rotateY(0.5 * Math.PI);
-            sideLight.add(new THREE.RectAreaLightHelper(sideLight));
+            /* OBJECTS */
 
-            var topLight = new THREE.RectAreaLight(0xFFFFFF, 0.12, 0.56, 0.57, 0.5, 0.5);
-            topLight.matrixAutoUpdate = true;
-            topLight.position.set(0.195, 0.620, -0.675);
-            topLight.rotateX(0.5*Math.PI);
-            topLight.add(new THREE.RectAreaLightHelper(topLight));
+            var mainObjects = [ '505010', '505020', '505030' ];
 
-            _scene.add(sideLight);
-            _scene.add(topLight);
-
-            /* OBJECTS */ 
-
-            var mainObjects = [ '505010', '505020' ];
             mainObjects.forEach(function (name) {
                 loadEntity(name, [0.0, 0.0, 0.0], undefined, undefined);
             });
+    
+            var restObjects = [ '805010' ];
 
-            var restObjects = [ '00255', '2550255', '255255255' ];
             restObjects.forEach(function (name) {
-                loadEntity(name, [0.0, 0.0, 0.0], "Basic", 0);
-            });
+                loadEntity(name, [0.0, 0.0, 0.0], "Basic", undefined);
+            });       
 
             break;
-
+        
         default:
             alert('Error: Missing scene parameter. Example: index.html?scene=Puma');
             break;
@@ -198,7 +160,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
                 _scene.add(obj);
 
                 var mesh = obj.children[0];
-               mesh.material = new THREE.MeshBasicMaterial({ 
+                mesh.material = new THREE.MeshBasicMaterial({ 
                     color: Math.random() * 0xFFFFFF, 
                     wireframe: true, 
                     wireframeLinewidth: 2
@@ -306,11 +268,26 @@ document.addEventListener("DOMContentLoaded", function(event) {
                         meshMaterial = new THREE.MeshStandardMaterial({ 
                             map: colorMap, 
                             normalMap: normalMap,
-                            normalScale: new THREE.Vector2(0.5, 0.5)
+                            roughness: 1.0,
+                            metalness: 0.0, 
                         });
                         loadObject(meshMaterial);
                     });
                     break;
+                case "Full":
+                    console.log("aca");
+                    texLoader.load(name + 'n' + imgType, function (normalMap) {
+                        texLoader.load(name + 'r' + imgType, function (roughMap) {
+                            meshMaterial = new THREE.MeshStandardMaterial({ 
+                                map: colorMap, 
+                                normalMap: normalMap,
+                                roughnessMap: roughMap,
+                                metalness: 0.0,                                
+                            });
+                            loadObject(meshMaterial);
+                        });
+                    });
+                    break;                
                 default:
                     meshMaterial = new THREE.MeshBasicMaterial({ 
                         color: Math.random() * 0xFFFFFF, 
